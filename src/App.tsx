@@ -137,7 +137,7 @@ function App() {
   const handleSaveUnit = (unitData: Partial<Unit>) => {
     const updatedUnit = unitData as Unit;
     let newUnits;
-    if (editingUnit) {
+    if (editingUnit || units.some(u => u.id === updatedUnit.id)) {
       newUnits = units.map(u => u.id === updatedUnit.id ? updatedUnit : u);
       addToast(`อัปเดตบทเรียน "${updatedUnit.title}" สำเร็จ`, 'success');
     } else {
@@ -193,7 +193,7 @@ function App() {
   const handleSaveFormula = (formulaData: Partial<Formula>) => {
     const updatedFormula = formulaData as Formula;
     let newFormulas;
-    if (editingFormula) {
+    if (editingFormula && formulas.some(f => f.id === updatedFormula.id)) {
       newFormulas = formulas.map((f) => (f.id === updatedFormula.id ? updatedFormula : f));
       addToast(`อัปเดตสูตร ${updatedFormula.name} เรียบร้อยแล้ว`, 'success');
     } else {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Unit, NoteSection } from '../types';
 import { Edit3, Check, Highlighter, Trash2, GripVertical, Plus } from 'lucide-react';
 
@@ -12,7 +12,6 @@ export const NoteSectionEditor: React.FC<NoteSectionEditorProps> = ({ unit, onSa
   const [sections, setSections] = useState<NoteSection[]>(unit.noteSections || []);
   const [showHighlightMenu, setShowHighlightMenu] = useState<{x: number, y: number} | null>(null);
 
-  // Sync when unit changes
   useEffect(() => {
     setSections(unit.noteSections || []);
   }, [unit]);
@@ -41,8 +40,7 @@ export const NoteSectionEditor: React.FC<NoteSectionEditorProps> = ({ unit, onSa
     setSections(sections.filter(s => s.id !== id));
   };
 
-  // Selection Highlight Logic
-  const handleMouseUp = () => {
+  const handleSelection = () => {
     if (!isEditing) return;
     const selection = window.getSelection();
     if (selection && selection.toString().trim().length > 0) {
@@ -65,9 +63,8 @@ export const NoteSectionEditor: React.FC<NoteSectionEditorProps> = ({ unit, onSa
   };
 
   return (
-    <div className="relative h-full flex flex-col" onMouseUp={handleMouseUp}>
+    <div className="relative h-full flex flex-col" onMouseUp={handleSelection} onKeyUp={handleSelection} onTouchEnd={handleSelection}>
       
-      {/* Toolbar */}
       <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-[var(--color-powder)] p-4 flex items-center justify-between z-20">
         <h3 className="font-serif font-bold text-[var(--color-ink)] text-lg">Study Notes</h3>
         {isEditing ? (
@@ -80,7 +77,6 @@ export const NoteSectionEditor: React.FC<NoteSectionEditorProps> = ({ unit, onSa
         )}
       </div>
 
-      {/* Editor Canvas */}
       <div className="p-8 flex-1">
         {sections.length === 0 && !isEditing && (
           <div className="text-center py-20 text-stone-400 font-medium">ไม่มีบันทึกการเรียนใน Unit นี้</div>
@@ -113,10 +109,7 @@ export const NoteSectionEditor: React.FC<NoteSectionEditorProps> = ({ unit, onSa
                 suppressContentEditableWarning
                 onBlur={(e) => updateSectionContent(section.id, e.currentTarget.innerHTML)}
                 className={`prose prose-sm max-w-none focus:outline-none ${isEditing ? 'min-h-[100px]' : ''}`}
-                style={{ 
-                   color: 'var(--color-ink)',
-                   lineHeight: '1.8'
-                }}
+                style={{ color: 'var(--color-ink)', lineHeight: '1.8' }}
                 dangerouslySetInnerHTML={{ __html: section.content }}
               />
             </div>
@@ -130,19 +123,18 @@ export const NoteSectionEditor: React.FC<NoteSectionEditorProps> = ({ unit, onSa
         </div>
       </div>
 
-      {/* Floating Highlight Toolbar */}
       {showHighlightMenu && isEditing && (
         <div 
           className="fixed z-50 bg-white shadow-xl border border-stone-200 rounded-full px-2 py-1.5 flex gap-1 animate-in zoom-in-95"
           style={{ top: showHighlightMenu.y, left: showHighlightMenu.x, transform: 'translateX(-50%)' }}
         >
-           <button onClick={() => applyHighlight('#fef08a')} className="w-6 h-6 rounded-full bg-yellow-200 hover:scale-110 transition-transform shadow-sm" title="Yellow"></button>
-           <button onClick={() => applyHighlight('#fbcfe8')} className="w-6 h-6 rounded-full bg-pink-200 hover:scale-110 transition-transform shadow-sm" title="Pink"></button>
-           <button onClick={() => applyHighlight('#bbf7d0')} className="w-6 h-6 rounded-full bg-green-200 hover:scale-110 transition-transform shadow-sm" title="Sage"></button>
-           <button onClick={() => applyHighlight('#e9d5ff')} className="w-6 h-6 rounded-full bg-purple-200 hover:scale-110 transition-transform shadow-sm" title="Lavender"></button>
-           <button onClick={() => applyHighlight('#fed7aa')} className="w-6 h-6 rounded-full bg-orange-200 hover:scale-110 transition-transform shadow-sm" title="Peach"></button>
+           <button onMouseDown={(e) => { e.preventDefault(); applyHighlight('#fef08a'); }} className="w-6 h-6 rounded-full bg-yellow-200 hover:scale-110 transition-transform shadow-sm" title="Yellow"></button>
+           <button onMouseDown={(e) => { e.preventDefault(); applyHighlight('#fbcfe8'); }} className="w-6 h-6 rounded-full bg-pink-200 hover:scale-110 transition-transform shadow-sm" title="Pink"></button>
+           <button onMouseDown={(e) => { e.preventDefault(); applyHighlight('#bbf7d0'); }} className="w-6 h-6 rounded-full bg-green-200 hover:scale-110 transition-transform shadow-sm" title="Sage"></button>
+           <button onMouseDown={(e) => { e.preventDefault(); applyHighlight('#e9d5ff'); }} className="w-6 h-6 rounded-full bg-purple-200 hover:scale-110 transition-transform shadow-sm" title="Lavender"></button>
+           <button onMouseDown={(e) => { e.preventDefault(); applyHighlight('#fed7aa'); }} className="w-6 h-6 rounded-full bg-orange-200 hover:scale-110 transition-transform shadow-sm" title="Peach"></button>
            <div className="w-[1px] h-4 bg-stone-200 my-auto mx-1"></div>
-           <button onClick={removeHighlight} className="p-1 text-stone-400 hover:text-rose-500 rounded-full hover:bg-rose-50" title="Remove Highlight"><Highlighter size={14}/></button>
+           <button onMouseDown={(e) => { e.preventDefault(); removeHighlight(); }} className="p-1 text-stone-400 hover:text-rose-500 rounded-full hover:bg-rose-50" title="Remove Highlight"><Highlighter size={14}/></button>
         </div>
       )}
     </div>
