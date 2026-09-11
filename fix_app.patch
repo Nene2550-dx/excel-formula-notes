@@ -1,0 +1,37 @@
+--- src/App.tsx
++++ src/App.tsx
+@@ -231,6 +231,17 @@
+     }
+   };
+ 
++  const handleMoveFormula = (formulaId: string, targetUnitId: string) => {
++    const target = formulas.find((f) => f.id === formulaId);
++    if (!target) return;
++    
++    const updatedFormulas = formulas.map(f => 
++      f.id === formulaId ? { ...f, unitId: targetUnitId, updatedAt: new Date().toISOString() } : f
++    );
++    setFormulas(updatedFormulas);
++    storageService.saveFormulas(updatedFormulas);
++    addToast(`ย้ายสูตร ${target.name} เรียบร้อยแล้ว`, 'success');
++  };
++
+   const handleToggleFavorite = (formulaId: string) => {
+     const updatedFormulas = formulas.map((f) => {
+       if (f.id === formulaId) {
+@@ -387,6 +398,7 @@
+             onDeleteUnit={handleDeleteUnit}
+             onEditFormula={handleOpenEditFormula}
+             onDeleteFormula={handleDeleteFormula}
++            onMoveFormula={handleMoveFormula}
+             onToggleFavorite={handleToggleFavorite}
+             onOpenImage={handleOpenImage}
+             onNotify={addToast}
+@@ -400,6 +412,7 @@
+             onBack={() => setViewMode('dashboard')}
+             onEditFormula={handleOpenEditFormula}
+             onDeleteFormula={handleDeleteFormula}
++            onMoveFormula={handleMoveFormula}
+             onToggleFavorite={handleToggleFavorite}
+             onOpenImage={handleOpenImage}
+             onNotify={addToast}
