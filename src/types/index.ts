@@ -79,3 +79,22 @@ export interface UserProfile {
   bio: string;
   avatarUrl?: string;
 }
+
+export interface ExcelTool {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  purpose: string;
+  howToUse: string;
+  steps: string;
+  example: string;
+  tips: string;
+  commonMistakes: string;
+  examNote: string;
+  shortcut: string;
+  images: string[];
+  isFavorite: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

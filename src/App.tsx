@@ -9,6 +9,7 @@ import { UnitDetail } from './components/UnitDetail';
 import { FavoritesView } from './components/FavoritesView';
 import { DraftsView } from './components/DraftsView';
 import { SettingsView } from './components/SettingsView';
+import { ExcelToolsView } from './components/ExcelToolsView';
 import { CustomizeView } from './components/CustomizeView';
 import { ExamModeView } from './components/ExamModeView';
 import { QuickNoteModal } from './components/QuickNoteModal';

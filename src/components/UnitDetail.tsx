@@ -3,7 +3,7 @@ import type { Formula, Unit } from '../types';
 import { ArrowLeft, Edit3, Paintbrush, Filter, PlusCircle, Search } from 'lucide-react';
 import { FormulaCard } from './FormulaCard';
 import { FormulaDetailModal } from './FormulaDetailModal';
-import { NoteSectionEditor } from './NoteSectionEditor';
+import { RichNoteEditor } from './RichNoteEditor';
 import { validateFormula } from '../utils/formulaValidator';
 
 interface UnitDetailProps {
@@ -96,7 +96,7 @@ export const UnitDetail = ({
                  <div className="text-xs font-bold text-stone-400">Expand / Collapse in Editor</div>
               </div>
               <div className="bg-white rounded-3xl shadow-sm border border-[var(--color-powder)] overflow-hidden">
-                <NoteSectionEditor unit={unit} onSave={handleSaveContent} />
+                <RichNoteEditor unit={unit} onSave={handleSaveContent} />
               </div>
             </div>
           )}
