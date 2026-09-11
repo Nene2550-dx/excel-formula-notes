@@ -27,6 +27,7 @@ function App() {
   const [viewMode, setViewMode] = useState<ViewMode>('dashboard');
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Modals
   const [isQuickNoteOpen, setIsQuickNoteOpen] = useState(false);
@@ -58,10 +59,14 @@ function App() {
 
   // Initialize
   useEffect(() => {
-    const loadedUnits = storageService.getUnits();
-    const loadedFormulas = storageService.getFormulas();
-    setUnits(loadedUnits);
-    setFormulas(loadedFormulas);
+    const loadData = async () => {
+      const loadedUnits = await storageService.getUnits();
+      const loadedFormulas = await storageService.getFormulas();
+      setUnits(loadedUnits);
+      setFormulas(loadedFormulas);
+      setIsLoaded(true);
+    };
+    loadData();
 
     // Global Keyboard Shortcuts
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -78,6 +83,8 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  if (!isLoaded) return <div className="h-screen flex items-center justify-center font-bold text-stone-500">Loading Storage...</div>;
 
   const selectedUnit = units.find((u) => u.id === selectedUnitId);
 

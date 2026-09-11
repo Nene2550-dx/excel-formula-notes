@@ -1,7 +1,9 @@
+const fs = require('fs');
 
+const storageCode = `
 import { get, set, del } from 'idb-keyval';
 import type { Unit, Formula, UserProfile } from '../types';
-const COURSE_UNITS: any[] = []; const COURSE_FORMULAS: any[] = [];
+import { COURSE_UNITS, COURSE_FORMULAS } from '../data/mockData';
 
 const UNITS_KEY = 'excel_notes_units_v2';
 const FORMULAS_KEY = 'excel_notes_formulas_v2';
@@ -109,3 +111,5 @@ export const storageService = {
     }
   }
 };
+`;
+fs.writeFileSync('src/services/storage.ts', storageCode);

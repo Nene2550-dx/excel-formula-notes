@@ -197,8 +197,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onOpe
                 <label className="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-3">Backup & Sync (iPad / Mac)</label>
                 <div className="flex gap-2">
                   <button 
-                    onClick={() => {
-                      const data = storageService.exportData();
+                    onClick={async () => {
+                      const data = await storageService.exportData();
                       const blob = new Blob([data], {type: 'application/json'});
                       const url = URL.createObjectURL(blob);
                       const a = document.createElement('a');
@@ -222,8 +222,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onOpe
                         const file = e.target.files?.[0];
                         if (file) {
                           const reader = new FileReader();
-                          reader.onload = (evt) => {
-                            const result = storageService.importData(evt.target?.result as string);
+                          reader.onload = async (evt) => {
+                            const result = await storageService.importData(evt.target?.result as string);
                             if (result.success) {
                               alert('อัปเดตข้อมูลสำเร็จ! กรุณารีเฟรชหน้าเว็บ');
                               window.location.reload();
