@@ -33,6 +33,18 @@ export const UnitDetail = ({
   const [selectedFormulaForDetail, setSelectedFormulaForDetail] = useState<Formula | null>(null);
 
   const unitFormulas = formulas.filter((f) => f.unitId === unit.id || f.unitId === String(unit.id));
+  
+  // BRUTAL HACK: If we can't find it by unitId, find ANY formula created in the last 60 seconds!
+  if (unitFormulas.length === 0) {
+    const recentFormulas = formulas.filter(f => {
+      if (!f.createdAt) return false;
+      const ageInSeconds = (new Date().getTime() - new Date(f.createdAt).getTime()) / 1000;
+      return ageInSeconds < 60; // Just created!
+    });
+    if (recentFormulas.length > 0) {
+      unitFormulas.push(...recentFormulas);
+    }
+  }
   console.log('Unit Formulas for', unit.id, unitFormulas);
 
   const handleSaveContent = async (updatedUnit: Unit) => {
