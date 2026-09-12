@@ -151,7 +151,8 @@ function App() {
       newUnits = units.map(u => u.id === updatedUnit.id ? updatedUnit : u);
       addToast(`อัปเดตบทเรียน "${updatedUnit.title}" สำเร็จ`, 'success');
     } else {
-      newUnits = [...units, updatedUnit];
+      const newUnitWithId = { ...updatedUnit, id: `u-${Date.now()}`, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), order: units.length };
+      newUnits = [...units, newUnitWithId];
       addToast(`สร้างบทเรียน "${updatedUnit.title}" สำเร็จ`, 'success');
     }
     setUnits(newUnits);
