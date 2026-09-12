@@ -39,9 +39,27 @@ export interface Unit {
   steps?: Step[]; // Legacy, moving to Formula
   createdAt: string;
   updatedAt: string;
+  // Excel Tool Advanced Fields
+  toolSteps?: ToolStep[];
+  tips?: string;
+  warnings?: string;
+  keyboardShortcut?: string;
+  toolExampleResult?: string;
+}
+
+
+export interface ToolStep {
+  id: string;
+  type: 'description' | 'cell_input' | 'command' | 'shortcut' | 'formula' | 'result' | 'image';
+  cell?: string;
+  content: string;
+  detail?: string;
+  imageUrl?: string;
+  caption?: string;
 }
 
 export interface Formula {
+
   type?: 'formula' | 'tool';
   stepsText?: string;
   id: string;
@@ -65,6 +83,11 @@ export interface Formula {
   isDraft: boolean;
   createdAt: string;
   updatedAt: string;
+  toolSteps?: ToolStep[];
+  tips?: string;
+  warnings?: string;
+  keyboardShortcut?: string;
+  toolExampleResult?: string;
 }
 
 export type ViewMode = 'dashboard' | 'unit' | 'library' | 'favorites' | 'drafts' | 'settings' | 'customize' | 'exam';

@@ -382,6 +382,7 @@ function App() {
           <ExamModeView 
             formulas={formulas}
             onBack={() => setViewMode('dashboard')}
+            onDeleteFormula={handleDeleteFormula}
           />
         )}
 

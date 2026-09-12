@@ -3,6 +3,7 @@ import type { Formula, Unit, Step } from '../types';
 import { X, Check, Upload, ImageIcon, AlertCircle } from 'lucide-react';
 import { validateFormula, type ValidationResult } from '../utils/formulaValidator';
 import { StepListEditor } from './StepListEditor';
+import { ExcelToolForm } from './ExcelToolForm';
 
 interface FormulaModalProps {
   isOpen: boolean;

@@ -1,16 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import type { Formula } from '../types';
-import { Search, Filter, BookOpen } from 'lucide-react';
+import { Search, Filter, BookOpen, Trash2 } from 'lucide-react';
 import { CopyButton } from './CopyButton';
 
 interface ExamModeViewProps {
   formulas: Formula[];
   onBack: () => void;
+  onDeleteFormula?: (formulaId: string) => void;
 }
 
 const CATEGORIES = ['All', 'Favorites', 'Math', 'Logical', 'Lookup', 'Text', 'Date & Time', 'Statistics', 'Financial', 'Other'];
 
-export const ExamModeView: React.FC<ExamModeViewProps> = ({ formulas, onBack }) => {
+export const ExamModeView: React.FC<ExamModeViewProps> = ({ formulas, onBack, onDeleteFormula }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -111,6 +112,11 @@ export const ExamModeView: React.FC<ExamModeViewProps> = ({ formulas, onBack }) 
                       <div className="flex items-center gap-2 mb-1">
                         <h2 className="text-2xl font-black text-stone-900 tracking-tight">{f.name}</h2>
                         {f.isFavorite && <span title="Favorite" className="text-amber-400">⭐</span>}
+                        {onDeleteFormula && (
+                          <button onClick={() => onDeleteFormula(f.id)} className="ml-auto text-rose-300 hover:text-rose-600 p-2 rounded-full hover:bg-rose-50 transition-colors">
+                            <Trash2 size={18} />
+                          </button>
+                        )}
                       </div>
                       <p className="text-stone-700 font-medium leading-relaxed">{f.purpose || f.shortDescription}</p>
                     </div>
