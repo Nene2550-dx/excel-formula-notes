@@ -1,17 +1,27 @@
+const fs = require('fs');
 
+// 1. Update Types
+let typesCode = fs.readFileSync('src/types/index.ts', 'utf8');
+if (!typesCode.includes("type?: 'formula' | 'tool'")) {
+  typesCode = typesCode.replace("export interface Formula {", "export interface Formula {\n  type?: 'formula' | 'tool';\n  stepsText?: string;");
+  typesCode = typesCode.replace("'dashboard' | 'unit' | 'favorites'", "'dashboard' | 'unit' | 'library' | 'favorites'");
+  fs.writeFileSync('src/types/index.ts', typesCode);
+}
+
+// 2. Update FormulaCard.tsx to handle both types
+const cardCode = `
 import React, { useState } from 'react';
 import type { Formula } from '../types';
-import { Star, ChevronDown, ChevronRight, Copy, Check, Trash2 } from 'lucide-react';
+import { Star, ChevronDown, ChevronRight, Copy, Check } from 'lucide-react';
 
 interface FormulaCardProps {
   formula: Formula;
   onViewDetails?: (formula: Formula) => void;
   onToggleFavorite?: (formulaId: string) => void;
   onEdit?: (formula: Formula) => void;
-  onDelete?: (formula: Formula) => void;
 }
 
-export const FormulaCard: React.FC<FormulaCardProps> = ({ formula, onViewDetails, onToggleFavorite, onEdit, onDelete }) => {
+export const FormulaCard: React.FC<FormulaCardProps> = ({ formula, onViewDetails, onToggleFavorite, onEdit }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [copiedFormula, setCopiedFormula] = useState(false);
   const [copiedExample, setCopiedExample] = useState(false);
@@ -45,9 +55,8 @@ export const FormulaCard: React.FC<FormulaCardProps> = ({ formula, onViewDetails
         </div>
         <div className="flex gap-2">
           {onEdit && <button onClick={() => onEdit(formula)} className="text-xs font-bold text-stone-400 hover:text-[var(--color-ink)]">Edit</button>}
-          {onDelete && <button onClick={() => onDelete(formula)} className="text-xs font-bold text-rose-400 hover:text-rose-600 ml-2">Delete</button>}
           {onToggleFavorite && (
-            <button onClick={() => onToggleFavorite(formula.id)} className={`p-1.5 rounded-full ${formula.isFavorite ? 'text-amber-400' : 'text-stone-300 hover:text-stone-400'}`}>
+            <button onClick={() => onToggleFavorite(formula.id)} className={\`p-1.5 rounded-full \${formula.isFavorite ? 'text-amber-400' : 'text-stone-300 hover:text-stone-400'}\`}>
               <Star className={formula.isFavorite ? 'fill-current' : ''} size={18} />
             </button>
           )}
@@ -121,3 +130,6 @@ export const FormulaCard: React.FC<FormulaCardProps> = ({ formula, onViewDetails
     </div>
   );
 };
+`;
+fs.writeFileSync('src/components/FormulaCard.tsx', cardCode);
+

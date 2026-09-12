@@ -32,7 +32,8 @@ export const UnitDetail = ({
   const [viewMode, setViewMode] = useState<ViewMode>('all');
   const [selectedFormulaForDetail, setSelectedFormulaForDetail] = useState<Formula | null>(null);
 
-  const unitFormulas = formulas.filter((f) => f.unitId === unit.id);
+  const unitFormulas = formulas.filter((f) => f.unitId === unit.id || f.unitId === String(unit.id));
+  console.log('Unit Formulas for', unit.id, unitFormulas);
 
   const handleSaveContent = async (updatedUnit: Unit) => {
     onEditUnit(updatedUnit);
@@ -106,14 +107,14 @@ export const UnitDetail = ({
             <div className="space-y-4">
                <div className="flex items-center justify-between border-b border-[var(--color-powder)] pb-2">
                  <h2 className="text-lg font-serif font-bold text-[var(--color-ink)] flex items-center gap-2">
-                   📊 Formulas
+                   🧮 Formulas & Excel Tools
                  </h2>
-                 <button onClick={() => onOpenAddFormula(unit.id)} className="px-3 py-1 bg-[var(--color-ink)] text-white text-xs font-bold rounded-full shadow-sm hover:bg-stone-800 transition-colors">+ Add Formula</button>
+                 <button onClick={() => onOpenAddFormula(unit.id)} className="px-3 py-1 bg-[var(--color-ink)] text-white text-xs font-bold rounded-full shadow-sm hover:bg-stone-800 transition-colors">+ Add Formula / Tool</button>
               </div>
 
               {unitFormulas.length === 0 ? (
                 <div className="text-center py-10 bg-white rounded-3xl border border-[var(--color-powder)] border-dashed text-stone-400 font-medium text-sm">
-                  No formulas added yet.
+                  ยังไม่มีสูตรหรือเครื่องมือใน Unit นี้
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4">

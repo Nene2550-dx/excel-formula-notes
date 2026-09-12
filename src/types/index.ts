@@ -42,6 +42,8 @@ export interface Unit {
 }
 
 export interface Formula {
+  type?: 'formula' | 'tool';
+  stepsText?: string;
   id: string;
   unitId: string;
   name: string;
@@ -65,7 +67,7 @@ export interface Formula {
   updatedAt: string;
 }
 
-export type ViewMode = 'dashboard' | 'unit' | 'favorites' | 'drafts' | 'settings' | 'customize' | 'exam';
+export type ViewMode = 'dashboard' | 'unit' | 'library' | 'favorites' | 'drafts' | 'settings' | 'customize' | 'exam';
 
 export interface ThemeSettings {
   mode: 'focus' | 'design';

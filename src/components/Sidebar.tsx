@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { ViewMode, UserProfile } from '../types';
 import { storageService } from '../services/storage';
 import { 
-  FolderOpen, Star, Search, PlusCircle, Settings, Home, Sparkles, BookOpen, PenTool, LayoutTemplate, Palette, Menu, FileEdit, Calculator, Camera, X
+  FolderOpen, Star, Search, PlusCircle, Settings, Home, Sparkles, BookOpen, PenTool, LayoutTemplate, Palette, Menu, FileEdit, Calculator, Camera, X, Wrench
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -38,6 +38,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onOpe
     { id: 'dashboard', label: 'Home', icon: Home },
     { id: 'units', label: 'My Units', icon: FolderOpen, hideOnDesktop: true },
     { id: 'study', label: 'Study', icon: BookOpen, hideOnDesktop: true },
+    { id: 'library', label: 'Formula Library', icon: Calculator },
     { id: 'formula_library', label: 'Formula Library', icon: Calculator, hideOnDesktop: true },
     { id: 'quick_notes', label: 'Quick Notes', icon: FileEdit, hideOnDesktop: true },
     { id: 'favorites', label: 'Favorites', icon: Star },

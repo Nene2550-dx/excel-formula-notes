@@ -9,12 +9,13 @@ import { UnitDetail } from './components/UnitDetail';
 import { FavoritesView } from './components/FavoritesView';
 import { DraftsView } from './components/DraftsView';
 import { SettingsView } from './components/SettingsView';
-import { ExcelToolsView } from './components/ExcelToolsView';
+import { FormulaLibraryView } from './components/FormulaLibraryView';
 import { CustomizeView } from './components/CustomizeView';
 import { ExamModeView } from './components/ExamModeView';
 import { QuickNoteModal } from './components/QuickNoteModal';
 import { FormulaModal } from './components/FormulaModal';
 import { MoveFormulaModal } from './components/MoveFormulaModal';
+import { DeleteFormulaModal } from './components/DeleteFormulaModal';
 import { AIImportModal } from './components/AIImportModal';
 import { UnitModal } from './components/UnitModal';
 import { GlobalSearch } from './components/GlobalSearch';
@@ -43,6 +44,7 @@ function App() {
   const [quickNoteUnitId, setQuickNoteUnitId] = useState<string | undefined>();
   const [editingUnit, setEditingUnit] = useState<Unit | null>(null);
   const [formulaToMove, setFormulaToMove] = useState<Formula | null>(null);
+  const [formulaToDelete, setFormulaToDelete] = useState<Formula | null>(null);
   const [lightboxImageUrl, setLightboxImageUrl] = useState<string | null>(null);
   const [lightboxTitle, setLightboxTitle] = useState<string>('');
 
@@ -205,7 +207,12 @@ function App() {
       newFormulas = formulas.map((f) => (f.id === updatedFormula.id ? updatedFormula : f));
       addToast(`อัปเดตสูตร ${updatedFormula.name} เรียบร้อยแล้ว`, 'success');
     } else {
-      newFormulas = [...formulas, updatedFormula];
+            // BRUTAL OVERRIDE to ensure it ALWAYS goes to the current unit if added from inside a unit
+      let forcedUnitId = updatedFormula.unitId || formulaModalUnitId || selectedUnitId || '';
+      if (viewMode === 'unit' && selectedUnitId) {
+        forcedUnitId = selectedUnitId;
+      }
+      newFormulas = [...formulas, { ...updatedFormula, unitId: forcedUnitId }];
       addToast(`เพิ่มสูตร ${updatedFormula.name} เรียบร้อยแล้ว`, 'success');
     }
     setFormulas(newFormulas);
@@ -223,15 +230,27 @@ function App() {
     addToast('บันทึก Quick Note เรียบร้อยแล้ว', 'success');
   };
 
+  const handleRemoveFromUnit = () => {
+    if (!formulaToDelete) return;
+    const newFormulas = formulas.map(f => f.id === formulaToDelete.id ? { ...f, unitId: '' } : f);
+    setFormulas(newFormulas);
+    storageService.saveFormulas(newFormulas);
+    setFormulaToDelete(null);
+    addToast('Removed from Unit', 'success');
+  };
+
+  const handleDeleteCompletely = () => {
+    if (!formulaToDelete) return;
+    const newFormulas = formulas.filter(f => f.id !== formulaToDelete.id);
+    setFormulas(newFormulas);
+    storageService.saveFormulas(newFormulas);
+    setFormulaToDelete(null);
+    addToast('Deleted completely', 'success');
+  };
+
   const handleDeleteFormula = (formulaId: string) => {
     const target = formulas.find((f) => f.id === formulaId);
-    if (!target) return;
-    if (window.confirm(`คุณต้องการลบสูตร "${target.name}" หรือไม่?`)) {
-      const updatedFormulas = formulas.filter((f) => f.id !== formulaId);
-      setFormulas(updatedFormulas);
-      storageService.saveFormulas(updatedFormulas);
-      addToast(`ลบสูตร ${target.name} แล้ว`, 'info');
-    }
+    if (target) setFormulaToDelete(target);
   };
 
   const handleMoveFormula = (formulaId: string, targetUnitId: string) => {
@@ -416,6 +435,16 @@ function App() {
           onClose={() => setIsFormulaModalOpen(false)}
           onSave={handleSaveFormula}
           onNotify={addToast}
+        />
+      )}
+
+      
+      {formulaToDelete && (
+        <DeleteFormulaModal
+          formula={formulaToDelete}
+          onClose={() => setFormulaToDelete(null)}
+          onRemoveFromUnit={handleRemoveFromUnit}
+          onDeleteCompletely={handleDeleteCompletely}
         />
       )}
 

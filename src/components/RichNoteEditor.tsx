@@ -67,7 +67,7 @@ export const RichNoteEditor: React.FC<RichNoteEditorProps> = ({ unit, onSave }) 
 
   return (
     <div className="relative h-full flex flex-col bg-white">
-      <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-[var(--color-powder)] p-4 flex items-center justify-between z-20">
+      <div className="relative bg-white/80 backdrop-blur-md border-b border-[var(--color-powder)] p-4 flex items-center justify-between z-20">
         <h3 className="font-serif font-bold text-[var(--color-ink)] text-lg">Apple Notes Style</h3>
         {isEditing ? (
           <div className="flex gap-2">
@@ -82,7 +82,7 @@ export const RichNoteEditor: React.FC<RichNoteEditorProps> = ({ unit, onSave }) 
       <div className="p-8 flex-1 overflow-y-auto">
         {editor && isEditing && (
           
-          <div className="bg-white/80 backdrop-blur-md shadow-sm border-b border-stone-200 p-2 flex items-center gap-2 sticky top-20 z-10 rounded-xl mb-4">
+          <div className="bg-white/80 backdrop-blur-md shadow-sm border-b border-stone-200 p-2 flex items-center gap-2 sticky top-0 z-10 rounded-xl mb-4">
             <button onClick={() => editor.chain().focus().toggleBold().run()} className={`p-1.5 rounded-lg ${editor.isActive('bold') ? 'bg-stone-200 text-[var(--color-ink)]' : 'text-stone-400 hover:bg-stone-100'}`}><Bold size={16}/></button>
             <button onClick={() => editor.chain().focus().toggleItalic().run()} className={`p-1.5 rounded-lg ${editor.isActive('italic') ? 'bg-stone-200 text-[var(--color-ink)]' : 'text-stone-400 hover:bg-stone-100'}`}><Italic size={16}/></button>
             <button onClick={() => editor.chain().focus().toggleUnderline().run()} className={`p-1.5 rounded-lg ${editor.isActive('underline') ? 'bg-stone-200 text-[var(--color-ink)]' : 'text-stone-400 hover:bg-stone-100'}`}><UnderlineIcon size={16}/></button>

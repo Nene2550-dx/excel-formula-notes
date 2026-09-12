@@ -24,9 +24,17 @@ export const FormulaModal: React.FC<FormulaModalProps> = ({
   onNotify,
 }) => {
   const [unitId, setUnitId] = useState(activeUnitId || units[0]?.id || '');
+  useEffect(() => {
+    if (activeUnitId) {
+      setUnitId(activeUnitId);
+    }
+  }, [activeUnitId]);
+  useEffect(() => { console.log('FormulaModal mounted with unitId:', unitId, 'activeUnitId prop:', activeUnitId); }, [activeUnitId]);
   const [name, setName] = useState(initialFormula?.name || '');
   const [shortDescription, setShortDescription] = useState(initialFormula?.shortDescription || '');
   const [formula, setFormula] = useState(initialFormula?.formula || '');
+  const [type, setType] = useState<'formula' | 'tool'>(initialFormula?.type || 'formula');
+  const [stepsText, setStepsText] = useState(initialFormula?.stepsText || '');
   const [purpose, setPurpose] = useState(initialFormula?.purpose || '');
   const [syntax, setSyntax] = useState(initialFormula?.syntax || '');
   const [example, setExample] = useState(initialFormula?.example || '');
@@ -79,19 +87,17 @@ export const FormulaModal: React.FC<FormulaModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !formula) {
+    if (!name || (type === 'formula' && !formula) || (type === 'tool' && !stepsText)) {
       onNotify('กรุณากรอกชื่อสูตรและสูตร', 'error');
       return;
     }
 
-    if (!isDraft && validation?.status === 'error') {
-      if (!window.confirm('สูตรยังมี Error อยู่ คุณต้องการบันทึกต่อไปหรือไม่?')) {
-        return;
-      }
-    }
+// Validation confirm removed to prevent silent failure
 
     const newFormula: Partial<Formula> = {
       id: initialFormula?.id || `f-${Date.now()}`,
+      type,
+      stepsText,
       unitId,
       name,
       shortDescription,
@@ -124,6 +130,12 @@ export const FormulaModal: React.FC<FormulaModalProps> = ({
 
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
           
+          
+          <div className="flex gap-4 p-1 bg-stone-100 rounded-xl mb-6 w-max">
+            <button type="button" onClick={() => setType('formula')} className={`px-6 py-2 rounded-lg font-bold text-sm transition-all ${type === 'formula' ? 'bg-white shadow-sm text-blue-600' : 'text-stone-500 hover:text-stone-700'}`}>🧮 Excel Formula</button>
+            <button type="button" onClick={() => setType('tool')} className={`px-6 py-2 rounded-lg font-bold text-sm transition-all ${type === 'tool' ? 'bg-white shadow-sm text-amber-600' : 'text-stone-500 hover:text-stone-700'}`}>🛠 Excel Tool</button>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-xs font-bold text-[var(--color-ink)] uppercase tracking-wider mb-1">ชื่อสูตร (Formula Name)*</label>
